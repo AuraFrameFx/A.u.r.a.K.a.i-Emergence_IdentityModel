@@ -17,11 +17,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Set up JDK 24
+    - name: Set up JDK 24 (Oracle EA)
       uses: actions/setup-java@v4
       with:
-        java-version: '24'
-        distribution: 'temurin'
+        java-version: '24-ea'
+        distribution: 'oracle'
         cache: gradle
 
     - name: Setup Android SDK
@@ -50,6 +50,9 @@ jobs:
       run: ./gradlew assembleDebug --no-daemon --stacktrace --warning-mode all
       continue-on-error: true
       id: build_step
+      env:
+        JAVA_HOME: ${{ env.JAVA_HOME }}
+        org.gradle.java.installations.auto-download: false
 
     - name: Display Build Summary
       if: always()

@@ -22,11 +22,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up JDK 24
+      - name: Set up JDK 24 (Oracle EA)
         uses: actions/setup-java@v5
         with:
-          distribution: 'temurin'
-          java-version: '24'
+          distribution: 'oracle'
+          java-version: '24-ea'
           cache: 'gradle'
 
       - name: Set up Android SDK with NDK
@@ -60,6 +60,8 @@ jobs:
 
       - name: Assemble Debug APK
         run: ./gradlew assembleDebug --no-daemon --stacktrace
+        env:
+          org.gradle.java.installations.auto-download: false
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v5
