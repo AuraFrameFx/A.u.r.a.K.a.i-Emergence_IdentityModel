@@ -56,12 +56,10 @@ jobs:
           gradle-home-cache-cleanup: true
 
       - name: Check build-logic
-        run: ./gradlew :build-logic:build --no-daemon
+        run: ./gradlew :build-logic:build --no-daemon -Dorg.gradle.java.installations.auto-download=false
 
       - name: Assemble Debug APK
-        run: ./gradlew assembleDebug --no-daemon --stacktrace
-        env:
-          org.gradle.java.installations.auto-download: false
+        run: ./gradlew assembleDebug --no-daemon --stacktrace -Dorg.gradle.java.installations.auto-download=false
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v5
@@ -102,18 +100,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
 
-      - name: Set up JDK 21
+      - name: Set up JDK 24 (Oracle EA)
         uses: actions/setup-java@v5
         with:
-          distribution: 'temurin'
-          java-version: '21'
+          distribution: 'oracle'
+          java-version: '24-ea'
           cache: 'gradle'
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Check for dependency updates
-        run: ./gradlew dependencyUpdates -Drevision=release --no-daemon || true
+        run: ./gradlew dependencyUpdates -Drevision=release --no-daemon -Dorg.gradle.java.installations.auto-download=false || true
 
       - name: Upload dependency reports
         if: always()
@@ -134,11 +132,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
 
-      - name: Set up JDK 21
+      - name: Set up JDK 24 (Oracle EA)
         uses: actions/setup-java@v5
         with:
-          distribution: 'temurin'
-          java-version: '21'
+          distribution: 'oracle'
+          java-version: '24-ea'
           cache: 'gradle'
 
       - name: Set up Android SDK with NDK
@@ -152,7 +150,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build Release APK
-        run: ./gradlew assembleRelease --no-daemon --stacktrace
+        run: ./gradlew assembleRelease --no-daemon --stacktrace -Dorg.gradle.java.installations.auto-download=false
 
       - name: Sign APK
         if: github.ref == 'refs/heads/main'

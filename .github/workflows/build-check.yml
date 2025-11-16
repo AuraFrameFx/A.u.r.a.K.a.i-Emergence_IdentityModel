@@ -47,12 +47,9 @@ jobs:
       run: echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "ndk;29.0.14206865" || true
 
     - name: Gradle Build (assemble only, skip tests)
-      run: ./gradlew assembleDebug --no-daemon --stacktrace --warning-mode all
+      run: ./gradlew assembleDebug --no-daemon --stacktrace --warning-mode all -Dorg.gradle.java.installations.auto-download=false
       continue-on-error: true
       id: build_step
-      env:
-        JAVA_HOME: ${{ env.JAVA_HOME }}
-        org.gradle.java.installations.auto-download: false
 
     - name: Display Build Summary
       if: always()
