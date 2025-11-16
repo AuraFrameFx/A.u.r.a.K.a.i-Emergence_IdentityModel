@@ -78,7 +78,9 @@ dependencyResolutionManagement {
     rootProject.name = "aurakai-reactive-intelligence"
 
 // --- Application ---
-    include(":app")
+    includeBuild(":app")
+    includeBuild(":build-logic")
+
 
 // --- Aura → ReactiveDesign (Creative UI & Collaboration) ---
     include(":aura:reactivedesign:auraslab")

@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Redo
+import androidx.compose.material.icons.automirrored.filled.RotateRight
 import androidx.compose.material.icons.automirrored.filled.Undo
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -113,7 +114,7 @@ class UndoRedoManager {
 
     fun undo() {
         if (undoStack.isNotEmpty()) {
-            val command = undoStack.removeLast()
+            val command = undoStack.removeAt(undoStack.lastIndex)
             command.undo()
             redoStack.add(command)
         }
@@ -121,7 +122,7 @@ class UndoRedoManager {
 
     fun redo() {
         if (redoStack.isNotEmpty()) {
-            val command = redoStack.removeLast()
+            val command = redoStack.removeAt(redoStack.lastIndex)
             command.execute()
             undoStack.add(command)
         }
@@ -134,26 +135,30 @@ class UndoRedoManager {
 }
 
 /**
- * Enhanced Component Editor with full property management
+ * Composable UI for editing a component's transform and appearance properties with undo/redo and preset management.
  *
- * @param componentId Unique identifier for the component being edited
- * @param initialProperties Initial property values (for binding to actual components)
- * @param presets Available property presets
- * @param onPropertyChanged Callback when property value changes
- * @param onPresetSave Callback to save new preset
- * @param onPresetLoad Callback when preset is loaded
- * @param onPresetDelete Callback to delete preset
+ * Provides controls for position (X/Y), size (width/height), rotation, z-index, and opacity; supports saving, loading,
+ * and deleting named presets and tracks changes via an undo/redo command stack.
+ *
+ * @param componentId Identifier of the component being edited.
+ * @param initialProperties Initial values for the editable properties.
+ * @param presets List of saved property presets available for loading.
+ * @param onPropertyChanged Callback invoked when a property value changes; receives the property name and its new value.
+ * @param onPresetSave Callback invoked to persist a newly created preset.
+ * @param onPresetLoad Callback invoked when a preset is loaded.
+ * @param onPresetDelete Callback invoked to request deletion of a preset by its id.
+ * @param modifier Optional [Modifier] to apply to the root layout.
  */
 @Composable
 fun ComponentEditor(
+    modifier: Modifier = Modifier,
     componentId: String,
     initialProperties: ComponentProperties = ComponentProperties(),
     presets: List<PropertyPreset> = emptyList(),
     onPropertyChanged: (String, Float) -> Unit = { _, _ -> },
     onPresetSave: (PropertyPreset) -> Unit = {},
     onPresetLoad: (PropertyPreset) -> Unit = {},
-    onPresetDelete: (String) -> Unit = {},
-    modifier: Modifier = Modifier
+    onPresetDelete: (String) -> Unit = {}
 ) {
     // Current property values (bound to actual component)
     var properties by remember { mutableStateOf(initialProperties) }
@@ -413,7 +418,7 @@ fun ComponentEditor(
                 // Transform Section
                 PropertySection(
                     title = "Transform",
-                    icon = Icons.Default.ThreeDRotation
+                    icon = Icons.AutoMirrored.Filled.RotateRight
                 ) {
                     PropertySlider(
                         label = "Rotation",
@@ -565,7 +570,15 @@ private fun PropertySlider(
 }
 
 /**
- * Preset card with load/delete actions
+ * Displays a compact card representing a saved property preset with actions to load or delete it.
+ *
+ * The card shows the preset's name and exposes two actions: tapping the card invokes [onLoad] to apply the preset,
+ * and tapping the delete icon invokes [onDelete] to remove the preset.
+ *
+ * @param preset The preset displayed by this card.
+ * @param onLoad Callback invoked when the card is tapped to load the preset.
+ * @param onDelete Callback invoked when the delete action is triggered for this preset.
+ * @param modifier Modifier applied to the card for layout/styling.
  */
 @Composable
 private fun PresetCard(
@@ -619,3 +632,6 @@ private fun PresetCard(
         }
     }
 }
+
+// provide a lightweight placeholder for 3D rotation concept (was unresolved)
+data class ThreeDRotation(val x: Float = 0f, val y: Float = 0f, val z: Float = 0f)
