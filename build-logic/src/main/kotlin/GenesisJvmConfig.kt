@@ -22,12 +22,14 @@ object GenesisJvmConfig {
     /**
      * The JVM version used throughout the Genesis project.
      *
-     * Java 24 bytecode is:
+     * Java 21 bytecode is:
+     * - Latest LTS (Long-Term Support) release
      * - Firebase compatible
-     * - Maximum target supported by Kotlin 2.2.x/2.3.x
+     * - Widely available in CI/CD environments
+     * - Supported by Kotlin 2.2.x/2.3.x
      * - Enables modern Java features with backward compatibility via desugaring
      */
-    const val JVM_VERSION = 24
+    const val JVM_VERSION = 21
 
     /**
      * Configure the Kotlin JVM toolchain and Kotlin compilation options for the given Gradle project.
@@ -51,7 +53,7 @@ object GenesisJvmConfig {
             tasks.withType<KotlinJvmCompile>().configureEach {
                 compilerOptions {
                     // Note: jvmTarget is automatically set by jvmToolchain() above
-                    // Manual jvmTarget.set(JvmTarget.JVM_24) is redundant
+                    // Manual jvmTarget.set(JvmTarget.JVM_21) is redundant
                     freeCompilerArgs.addAll(
                         "-opt-in=kotlin.RequiresOptIn",
                         "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",

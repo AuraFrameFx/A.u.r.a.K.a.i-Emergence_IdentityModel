@@ -21,16 +21,16 @@ configurations.all {
 }
 
 // Configure Kotlin compilation to match Java toolchain
-// MUST match the target used in GenesisApplicationPlugin and GenesisLibraryHiltPlugin (JVM 24)
+// MUST match the target used in GenesisApplicationPlugin and GenesisLibraryHiltPlugin (JVM 21)
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile>().configureEach {
     compilerOptions {
-        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_24)
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
     }
 }
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(24))
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
 }
 
