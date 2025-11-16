@@ -1,3 +1,8 @@
+import org.gradle.internal.jvm.Jvm
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import kotlin.toString
+
 plugins {
     `kotlin-dsl`        // applies java-gradle-plugin
 }
@@ -22,17 +27,13 @@ configurations.all {
 
 // Configure Kotlin compilation to match Java toolchain
 // MUST match the target used in GenesisApplicationPlugin and GenesisLibraryHiltPlugin (JVM 24)
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile>().configureEach {
+tasks.withType<KotlinCompile> {
     compilerOptions {
-        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_24)
+        jvmTarget.set(JvmTarget.JVM_24) // This is the standard way
     }
 }
 
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(24))
-    }
-}
+// Or using your specific .set() syntax if required by a convention plugin:
 
 gradlePlugin {
     plugins {

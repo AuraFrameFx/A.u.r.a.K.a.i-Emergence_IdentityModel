@@ -29,7 +29,7 @@ open class RomToolsManager @Inject constructor(
     private val backupManager: BackupManager,
     private val retentionManager: AurakaiRetentionManager
 ) {
-    private val _romToolsState = MutableStateFlow(RomToolsState())
+    val _romToolsState = MutableStateFlow(RomToolsState())
     val romToolsState: StateFlow<RomToolsState> = _romToolsState
 
     private val _operationProgress = MutableStateFlow<OperationProgress?>(null)

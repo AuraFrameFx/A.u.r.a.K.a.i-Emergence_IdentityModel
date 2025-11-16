@@ -95,7 +95,7 @@ class FakeBackupManager : BackupManager {
     override suspend fun createFullBackup(): Result<Unit> = Result.success(Unit)
 
     override suspend fun createNandroidBackup(
-        backupName: String,
+        name: String,
         progressCallback: (Float) -> Unit
     ): Result<BackupInfo> {
         progressCallback(100f)
@@ -113,7 +113,7 @@ class FakeBackupManager : BackupManager {
     }
 
     override suspend fun restoreNandroidBackup(
-        backupInfo: BackupInfo,
+        backup: BackupInfo,
         progressCallback: (Float) -> Unit
     ): Result<Unit> {
         progressCallback(100f)

@@ -1,10 +1,10 @@
-// File: romtools/src/main/kotlin/dev/aurakai/auraframefx/romtools/ui/RomToolsScreen.kt
 package dev.aurakai.auraframefx.romtools.ui
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,8 +17,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.Undo
 import androidx.compose.material.icons.filled.Backup
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.CheckCircle
@@ -32,15 +35,18 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -57,17 +63,16 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.Image
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
+import androidx.compose.runtime.livedata.observeAsState // REMOVED THIS IMPORT as it's not what we use
 import dev.aurakai.auraframefx.embodiment.retrobackdrop.BackdropState
 import dev.aurakai.auraframefx.embodiment.retrobackdrop.CardExplosionEffect
 import dev.aurakai.auraframefx.embodiment.retrobackdrop.MegaManBackdropRenderer
 import dev.aurakai.auraframefx.romtools.BackupInfo
 import dev.aurakai.auraframefx.romtools.RomCapabilities
 import dev.aurakai.auraframefx.romtools.RomToolsManager
+import dev.aurakai.auraframefx.romtools.RomToolsState
+import dev.aurakai.auraframefx.romtools.OperationProgress
+import dev.aurakai.auraframefx.romtools.RomOperation
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -83,6 +88,7 @@ fun RomToolsScreen(
     romToolsManager: RomToolsManager = hiltViewModel<RomToolsManager>()
 ) {
     val romToolsState by romToolsManager.romToolsState.collectAsStateWithLifecycle()
+    // Access delegated property correctly in composable scope
     val operationProgress by romToolsManager.operationProgress.collectAsStateWithLifecycle()
     val coroutineScope = rememberCoroutineScope()
 
@@ -117,7 +123,7 @@ fun RomToolsScreen(
 
     // Detect operation start and trigger explosion
     val isOperationRunning = operationProgress != null && operationProgress.progress < 100f
-    LaunchedEffect(isOperationRunning) {
+    LaunchedEffect(isOperationRunning, backdropState) {
         if (isOperationRunning && !wasOperationRunning && backdropState == BackdropState.STATIC) {
             // Operation just started - trigger explosion!
             Timber.i("🎴 ROM operation started - triggering card explosion!")
@@ -143,7 +149,7 @@ fun RomToolsScreen(
     }
 
     // Handle operation completion
-    LaunchedEffect(operationProgress) {
+    LaunchedEffect(operationProgress?.progress) {
         if (operationProgress != null && operationProgress.progress >= 100f && backdropState == BackdropState.ACTIVE) {
             backdropState = BackdropState.COMPLETING
             delay(500)  // Brief pause
@@ -176,22 +182,15 @@ fun RomToolsScreen(
                     }
                 }
 
-                BackdropState.ACTIVE -> {
-                    // Full animated backdrop
-                    MegaManBackdropRenderer(
-                        operationProgress = operationProgress,
-                        enabled = true
-                    )
-                }
-
+                BackdropState.ACTIVE,
                 BackdropState.COMPLETING,
                 BackdropState.VICTORY -> {
-                    // Freeze frame with victory pose
+                    // Full animated backdrop or Freeze frame with victory pose
                     MegaManBackdropRenderer(
                         operationProgress = operationProgress,
                         enabled = true
                     )
-                    // TODO: Add victory overlay
+                    // TODO: Add victory overlay when in COMPLETING/VICTORY states
                 }
             }
         }
@@ -281,6 +280,8 @@ private fun handleRomAction(
 ) {
     coroutineScope.launch {
         when (actionType) {
+            RomActionType.FLASH_ROM -> { /* Handled in Composable */ }
+            RomActionType.RESTORE_BACKUP -> { /* Handled in Composable */ }
             RomActionType.CREATE_BACKUP -> {
                 // Generate a timestamp-based backup name
                 val backupName = "AuraKai_Backup_${System.currentTimeMillis()}"
@@ -344,8 +345,8 @@ private fun LoadingScreen() {
 
 @Composable
 private fun MainContent(
-    romToolsState: dev.aurakai.auraframefx.romtools.RomToolsState,
-    operationProgress: dev.aurakai.auraframefx.romtools.OperationProgress?,
+    romToolsState: RomToolsState,
+    operationProgress: OperationProgress?,
     onActionClick: (RomActionType) -> Unit = {}
 ) {
     LazyColumn(
@@ -619,7 +620,7 @@ private fun InfoRow(label: String, value: String) {
 
 @Composable
 private fun OperationProgressCard(
-    operation: dev.aurakai.auraframefx.romtools.OperationProgress,
+    operation: OperationProgress,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -640,7 +641,7 @@ private fun OperationProgressCard(
                 fontWeight = FontWeight.Bold
             )
 
-            // LinearProgressIndicator expects a Float for progress (not a lambda)
+            // FIX: LinearProgressIndicator requires progress as a lambda
             LinearProgressIndicator(
                 progress = { operation.progress / 100f },
                 modifier = Modifier.fillMaxWidth(),
@@ -661,8 +662,8 @@ private fun OperationProgressCard(
 @Preview
 @Composable
 private fun OperationProgressCardPreview() {
-    val operationProgress = dev.aurakai.auraframefx.romtools.OperationProgress(
-        operation = dev.aurakai.auraframefx.romtools.RomOperation.FLASHING_ROM,
+    val operationProgress = OperationProgress(
+        operation = RomOperation.FLASHING_ROM,
         progress = 75f
     )
     OperationProgressCard(operation = operationProgress)
@@ -841,25 +842,25 @@ enum class RomActionType {
 }
 
 /**
- * Provide a human-readable display name for a RomOperation.
+ * Provides a human-readable display name for a RomOperation.
  *
  * @return The human-readable display name corresponding to this operation.
  */
-fun dev.aurakai.auraframefx.romtools.RomOperation.getDisplayName(): String {
+fun RomOperation.getDisplayName(): String {
     return when (this) {
-        dev.aurakai.auraframefx.romtools.RomOperation.VERIFYING_ROM -> "Verifying ROM"
-        dev.aurakai.auraframefx.romtools.RomOperation.CREATING_BACKUP -> "Creating Backup"
-        dev.aurakai.auraframefx.romtools.RomOperation.UNLOCKING_BOOTLOADER -> "Unlocking Bootloader"
-        dev.aurakai.auraframefx.romtools.RomOperation.INSTALLING_RECOVERY -> "Installing Recovery"
-        dev.aurakai.auraframefx.romtools.RomOperation.FLASHING_ROM -> "Flashing ROM"
-        dev.aurakai.auraframefx.romtools.RomOperation.VERIFYING_INSTALLATION -> "Verifying Installation"
-        dev.aurakai.auraframefx.romtools.RomOperation.RESTORING_BACKUP -> "Restoring Backup"
-        dev.aurakai.auraframefx.romtools.RomOperation.APPLYING_OPTIMIZATIONS -> "Applying Optimizations"
-        dev.aurakai.auraframefx.romtools.RomOperation.DOWNLOADING_ROM -> "Downloading ROM"
-        dev.aurakai.auraframefx.romtools.RomOperation.SETTING_UP_RETENTION -> "Setting Up Retention"
-        dev.aurakai.auraframefx.romtools.RomOperation.RESTORING_AURAKAI -> "Restoring Aurakai"
-        dev.aurakai.auraframefx.romtools.RomOperation.COMPLETED -> "Completed"
-        dev.aurakai.auraframefx.romtools.RomOperation.FAILED -> "Failed"
+        RomOperation.VERIFYING_ROM -> "Verifying ROM"
+        RomOperation.CREATING_BACKUP -> "Creating Backup"
+        RomOperation.UNLOCKING_BOOTLOADER -> "Unlocking Bootloader"
+        RomOperation.INSTALLING_RECOVERY -> "Installing Recovery"
+        RomOperation.FLASHING_ROM -> "Flashing ROM"
+        RomOperation.VERIFYING_INSTALLATION -> "Verifying Installation"
+        RomOperation.RESTORING_BACKUP -> "Restoring Backup"
+        RomOperation.APPLYING_OPTIMIZATIONS -> "Applying Optimizations"
+        RomOperation.DOWNLOADING_ROM -> "Downloading ROM"
+        RomOperation.SETTING_UP_RETENTION -> "Setting Up Retention"
+        RomOperation.RESTORING_AURAKAI -> "Restoring Aurakai"
+        RomOperation.COMPLETED -> "Completed"
+        RomOperation.FAILED -> "Failed"
     }
 }
 
@@ -867,7 +868,8 @@ fun dev.aurakai.auraframefx.romtools.RomOperation.getDisplayName(): String {
  * Displays a card summarizing an available ROM, showing key metadata such as name, version,
  * Android target, size, and maintainer.
  *
- * @param rom The AvailableRom whose information is rendered in the card. */
+ * @param rom The AvailableRom whose information is rendered in the card.
+ */
 @Composable
 private fun AvailableRomCard(rom: dev.aurakai.auraframefx.romtools.AvailableRom) {
     // Implementation for available ROM card

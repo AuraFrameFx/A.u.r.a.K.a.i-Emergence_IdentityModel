@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -126,6 +125,8 @@ fun CanvasScreen(
         collaborationEvents?.collectLatest { operation -> paths.add(operation) }
     }
 
+    val backgroundColor = MaterialTheme.colorScheme.background
+    
     Box(modifier = modifier.fillMaxSize()) {
         // --- Drawing elements are now placed in Composable scopes (Canvas) ---
 
@@ -135,8 +136,12 @@ fun CanvasScreen(
                 when (operation) {
                     is DrawingOperation.PathOp -> {
                         drawPath(
-                            path = operation.path, color = operation.color, style = Stroke(
-                                width = operation.strokeWidth.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round
+                            path = operation.path, 
+                            color = if (operation.tool == DrawingTool.ERASER) backgroundColor else operation.color, 
+                            style = Stroke(
+                                width = operation.strokeWidth.toPx(), 
+                                cap = StrokeCap.Round, 
+                                join = StrokeJoin.Round
                             )
                         )
                     }
@@ -185,7 +190,7 @@ fun CanvasScreen(
             Canvas(modifier = Modifier.fillMaxSize()) {
                 drawPath(
                     path,
-                    if (currentTool == DrawingTool.ERASER) colorScheme.background else currentColor,
+                    color = if (currentTool == DrawingTool.ERASER) backgroundColor else currentColor,
                     style = Stroke(
                         width = if (currentTool == DrawingTool.HIGHLIGHTER) 16.dp.toPx() else currentStrokeWidth.toPx(),
                         cap = StrokeCap.Round,
@@ -195,15 +200,15 @@ fun CanvasScreen(
             }
         }
 
-        // Removed logic that called getWindowInfo()
-
         // Gesture handling Canvas (Input only)
         Canvas(
             modifier = Modifier
                 .fillMaxSize()
                 .pointerInput(Unit) {
+                    var lastOffset = Offset.Zero
                     detectDragGestures(onDragStart = { offset ->
                         startPosition = offset
+                        lastOffset = offset
                         when (currentTool) {
                             DrawingTool.PEN, DrawingTool.ERASER, DrawingTool.HIGHLIGHTER -> {
                                 currentPath = Path().apply {
@@ -215,6 +220,7 @@ fun CanvasScreen(
                             }
                         }
                     }, onDrag = { change, _ ->
+                        lastOffset = change.position
                         when (currentTool) {
                             DrawingTool.PEN, DrawingTool.ERASER, DrawingTool.HIGHLIGHTER -> {
                                 currentPath?.lineTo(change.position.x, change.position.y)
@@ -224,13 +230,13 @@ fun CanvasScreen(
                             }
                         }
                     }, onDragEnd = {
-                        val endPosition = startPosition
+                        val endPosition = lastOffset
                         when (currentTool) {
                             DrawingTool.PEN, DrawingTool.ERASER, DrawingTool.HIGHLIGHTER -> {
                                 currentPath?.let { path ->
                                     val op = DrawingOperation.PathOp(
                                         path = path,
-                                        color = if (currentTool == DrawingTool.ERASER) colorScheme.background else currentColor,
+                                        color = if (currentTool == DrawingTool.ERASER) Color.Unspecified else currentColor,
                                         strokeWidth = if (currentTool == DrawingTool.HIGHLIGHTER) 16.dp else currentStrokeWidth,
                                         tool = currentTool
                                     )
@@ -309,7 +315,6 @@ fun CanvasScreen(
         Box(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .fillMaxWidth()
                 .background(colorScheme.surfaceVariant.copy(alpha = 0.9f))
                 .padding(8.dp)
         ) {
