@@ -33,8 +33,6 @@ tasks.withType<KotlinCompile> {
     }
 }
 
-// Or using your specific .set() syntax if required by a convention plugin:
-
 gradlePlugin {
     plugins {
         register("genesisApplication") {

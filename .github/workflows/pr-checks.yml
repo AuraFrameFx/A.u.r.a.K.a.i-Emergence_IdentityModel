@@ -73,11 +73,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
 
-      - name: Set up JDK 21
+      - name: Set up JDK 24 (Oracle EA)
         uses: actions/setup-java@v5
         with:
-          distribution: 'temurin'
-          java-version: '21'
+          distribution: 'oracle'
+          java-version: '24-ea'
           cache: 'gradle'
 
       - name: Set up Android SDK with NDK
@@ -91,7 +91,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build Release APK
-        run: ./gradlew assembleRelease --no-daemon
+        run: ./gradlew assembleRelease --no-daemon -Dorg.gradle.java.installations.auto-download=false
 
       - name: Get APK size
         id: apk-size
