@@ -71,10 +71,10 @@ class GenesisLibraryHiltPlugin : Plugin<Project> {
                     }
                 }
 
-                // Java 21 bytecode (LTS - Compatible with CI/CD environments)
+                // Java 21 bytecode (Compatible with current JVM)
                 compileOptions {
-                    sourceCompatibility = JavaVersion.VERSION_21
-                    targetCompatibility = JavaVersion.VERSION_21
+                    sourceCompatibility = JavaVersion.VERSION_24
+                    targetCompatibility = JavaVersion.VERSION_24
                     isCoreLibraryDesugaringEnabled = true
                 }
 

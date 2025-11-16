@@ -74,10 +74,10 @@ class GenesisLibraryPlugin : Plugin<Project> {
                     }
                 }
 
-                // Java 21 bytecode (LTS - Firebase + AGP 9.0 compatible)
+                // Java 24 bytecode (Firebase + AGP 9.0 compatible)
                 compileOptions {
-                    sourceCompatibility = JavaVersion.VERSION_21
-                    targetCompatibility = JavaVersion.VERSION_21
+                    sourceCompatibility = JavaVersion.VERSION_24
+                    targetCompatibility = JavaVersion.VERSION_24
                     isCoreLibraryDesugaringEnabled = true
                 }
 
