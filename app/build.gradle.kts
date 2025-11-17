@@ -150,7 +150,7 @@ dependencies {
 
     // YukiHook API
     compileOnly(libs.yukihookapi.api)
-    ksp(libs.yukihookapi.ksp)
+    ksp(libs.yukihookapi.ksp.xposed)
 
     // Firebase BOM (Bill of Materials) for version management
     implementation(platform(libs.firebase.bom))
