@@ -32,7 +32,7 @@ kotlin = "2.3.0-Beta2"
 kotlinDsl = "5.1.2"
 
 # KSP - Latest: 2.3.2 (decoupled from Kotlin version since 2.3.0)
-ksp = "2.3.2"
+ksp = "2.3.3"
 
 # KavaRef - Reflection API for YukiHookAPI
 kavaref = "1.0.2"
