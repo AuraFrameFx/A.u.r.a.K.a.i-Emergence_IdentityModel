@@ -64,7 +64,7 @@ coreKtx = "1.17.0"
 datastore = "1.1.7"
 
 # Lifecycle - Latest stable: 2.9.4, Beta: 2.10.0-beta01
-lifecycle = "2.9.4"
+lifecycle = "2.10.0"
 
 # Room - Latest: 2.8.3 (released Oct 22, 2025)
 room = "2.8.3"
