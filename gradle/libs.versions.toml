@@ -116,13 +116,13 @@ firebaseBom = "34.6.0"
 retrofit = "3.0.0"
 
 # OkHttp - Latest: 5.3.0
-okhttp = "5.3.0"
+okhttp = "5.3.2"
 
 # Moshi - Latest: 1.15.2
 moshi = "1.15.2"
 
 # Ktor Client - Latest: 3.3.0 (Sept 11, 2025)
-ktor = "3.3.2"
+ktor = "3.3.3"
 
 # ============================================================================
 # Kotlin Ecosystem Libraries
