@@ -67,7 +67,7 @@ datastore = "1.1.7"
 lifecycle = "2.9.4"
 
 # Room - Latest: 2.8.3 (released Oct 22, 2025)
-room = "2.8.3"
+room = "2.8.4"
 
 # Navigation Compose - Latest stable: 2.8.9 (March 12, 2025)
 # RC: 2.9.0-rc01, Navigation 3: 1.0.0-beta01
