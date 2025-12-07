@@ -26,7 +26,7 @@ hilt = "2.57.2"
 hiltWork = "1.3.0"
 
 # Kotlin - Latest beta: 2.3.0-Beta2 (bleeding-edge for Compose improvements)
-kotlin = "2.3.0-Beta2"
+kotlin = "2.3.0-RC"
 
 # Kotlin DSL
 kotlinDsl = "5.1.2"
