@@ -61,7 +61,7 @@ appcompat = "1.7.1"
 coreKtx = "1.17.0"
 
 # DataStore - Latest: 1.1.7 (released May 20, 2025)
-datastore = "1.1.7"
+datastore = "1.2.0"
 
 # Lifecycle - Latest stable: 2.9.4, Beta: 2.10.0-beta01
 lifecycle = "2.9.4"
