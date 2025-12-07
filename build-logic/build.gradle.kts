@@ -62,7 +62,7 @@ dependencies {
     // Hilt Gradle Plugin (Android AAR dependencies excluded globally via configurations.all)
     implementation("com.google.dagger:hilt-android-gradle-plugin:2.57.2")
 
-    implementation("com.google.devtools.ksp:symbol-processing-gradle-plugin:2.3.2")
+    implementation("com.google.devtools.ksp:symbol-processing-gradle-plugin:2.3.3")
     implementation("com.google.gms:google-services:4.4.4")
     testImplementation(kotlin("test"))
 }
