@@ -3,7 +3,7 @@
 # Core Build Tools (AGP 9.0.0-alpha14 + Kotlin 2.3.0-Beta2)
 # ============================================================================
 # Android Gradle Plugin - Latest: 9.0.0-alpha14 (requires Gradle 9.2.0+)
-agp = "9.0.0-beta01"
+agp = "9.0.0-beta03"
 
 # Gradle - Latest: 9.2.0
 gradle = "9.2.0"
@@ -49,7 +49,7 @@ target-sdk = "36"
 # AndroidX & Jetpack Libraries
 # ============================================================================
 # Activity Compose - Latest stable: 1.11.0, RC: 1.12.0-rc01
-activityCompose = "1.11.0"
+activityCompose = "1.12.1"
 
 # AndroidX BOM (if needed)
 androidxBom = "1.17.0"
