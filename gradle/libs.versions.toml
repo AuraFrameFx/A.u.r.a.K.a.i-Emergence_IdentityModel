@@ -3,7 +3,7 @@
 # Core Build Tools (AGP 9.0.0-alpha14 + Kotlin 2.3.0-Beta2)
 # ============================================================================
 # Android Gradle Plugin - Latest: 9.0.0-alpha14 (requires Gradle 9.2.0+)
-agp = "9.0.0-beta01"
+agp = "9.0.0-beta03"
 
 # Gradle - Latest: 9.2.0
 gradle = "9.2.0"
@@ -32,7 +32,7 @@ kotlin = "2.3.0-Beta2"
 kotlinDsl = "5.1.2"
 
 # KSP - Latest: 2.3.2 (decoupled from Kotlin version since 2.3.0)
-ksp = "2.3.2"
+ksp = "2.3.3"
 
 # KavaRef - Reflection API for YukiHookAPI
 kavaref = "1.0.2"
