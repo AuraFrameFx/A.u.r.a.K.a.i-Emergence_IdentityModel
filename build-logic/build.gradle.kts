@@ -53,7 +53,7 @@ gradlePlugin {
 dependencies {
     // IMPORTANT: build-logic cannot use version catalog (libs.*) - builds BEFORE catalog available!
     // Use hardcoded versions matching settings.gradle.kts plugin declarations
-    implementation("com.android.tools.build:gradle:9.0.0-beta01")
+    implementation("com.android.tools.build:gradle:9.0.0-beta03")
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:2.3.0-Beta2")
 
     implementation("org.jetbrains.kotlin:compose-compiler-gradle-plugin:2.3.0-Beta2")
@@ -62,7 +62,7 @@ dependencies {
     // Hilt Gradle Plugin (Android AAR dependencies excluded globally via configurations.all)
     implementation("com.google.dagger:hilt-android-gradle-plugin:2.57.2")
 
-    implementation("com.google.devtools.ksp:symbol-processing-gradle-plugin:2.3.2")
+    implementation("com.google.devtools.ksp:symbol-processing-gradle-plugin:2.3.3")
     implementation("com.google.gms:google-services:4.4.4")
     testImplementation(kotlin("test"))
 }
