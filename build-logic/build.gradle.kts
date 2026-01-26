@@ -54,10 +54,10 @@ dependencies {
     // IMPORTANT: build-logic cannot use version catalog (libs.*) - builds BEFORE catalog available!
     // Use hardcoded versions matching settings.gradle.kts plugin declarations
     implementation("com.android.tools.build:gradle:9.0.0-beta01")
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:2.3.0-Beta2")
+    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:2.3.20-Beta1")
 
-    implementation("org.jetbrains.kotlin:compose-compiler-gradle-plugin:2.3.0-Beta2")
-    implementation("org.jetbrains.kotlin:kotlin-serialization:2.3.0-Beta2")
+    implementation("org.jetbrains.kotlin:compose-compiler-gradle-plugin:2.3.20-Beta1")
+    implementation("org.jetbrains.kotlin:kotlin-serialization:2.3.20-Beta1")
 
     // Hilt Gradle Plugin (Android AAR dependencies excluded globally via configurations.all)
     implementation("com.google.dagger:hilt-android-gradle-plugin:2.57.2")
@@ -71,7 +71,7 @@ dependencies {
 dependencies {
     add("implementation", "com.google.dagger:hilt-android:2.57.2")
     add("implementation", "com.google.dagger:hilt-android-compiler:2.57.2")
-    add("implementation", "org.jetbrains.kotlin:kotlin-gradle-plugin:2.3.0-Beta2")
+    add("implementation", "org.jetbrains.kotlin:kotlin-gradle-plugin:2.3.20-Beta1")
 }
 // ═══════════════════════════════════════════════════════════════════════════
 // Genesis Convention Plugins Registration
